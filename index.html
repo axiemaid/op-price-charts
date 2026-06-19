@@ -70,71 +70,33 @@ async function init() {
       showLine: false,
     }));
 
-  // polynomial regression (degree 2) trend curves
-  function polyFit(xs, ys, degree) {
-    // normalize x values to avoid floating point issues
-    const xMin = Math.min(...xs), xMax = Math.max(...xs);
-    const xRange = xMax - xMin || 1;
-    const xn = xs.map(x => (x - xMin) / xRange);
-    const n = xs.length;
-    const cols = degree + 1;
-    // build normal equations
-    const m = Array.from({length: cols}, () => new Array(cols + 1).fill(0));
-    for (let i = 0; i < cols; i++) {
-      for (let j = 0; j < cols; j++) {
-        for (let k = 0; k < n; k++) m[i][j] += Math.pow(xn[k], i + j);
-      }
-      for (let k = 0; k < n; k++) m[i][cols] += ys[k] * Math.pow(xn[k], i);
-    }
-    // gaussian elimination
-    for (let i = 0; i < cols; i++) {
-      let maxRow = i;
-      for (let k = i + 1; k < cols; k++) if (Math.abs(m[k][i]) > Math.abs(m[maxRow][i])) maxRow = k;
-      [m[i], m[maxRow]] = [m[maxRow], m[i]];
-      if (Math.abs(m[i][i]) < 1e-12) continue;
-      for (let k = i + 1; k < cols; k++) {
-        const f = m[k][i] / m[i][i];
-        for (let j = i; j <= cols; j++) m[k][j] -= f * m[i][j];
-      }
-    }
-    const coeffs = new Array(cols).fill(0);
-    for (let i = cols - 1; i >= 0; i--) {
-      coeffs[i] = m[i][cols];
-      for (let j = i + 1; j < cols; j++) coeffs[i] -= m[i][j] * coeffs[j];
-      coeffs[i] /= m[i][i];
-    }
-    return x => {
-      const xNorm = (x - xMin) / xRange;
-      return coeffs.reduce((sum, c, i) => sum + c * Math.pow(xNorm, i), 0);
-    };
-  }
-
   Object.entries(GRADE_CONFIG).forEach(([grade, cfg]) => {
     const pts = byGrade[grade];
     if (!pts || pts.length < 3) return;
     const sorted = [...pts].sort((a, b) => new Date(a.x) - new Date(b.x));
     const xs = sorted.map(p => new Date(p.x).getTime());
     const ys = sorted.map(p => p.y);
-    const predict = polyFit(xs, ys, 2);
-    // sample ~30 points along the curve
-    const steps = 30;
-    const xMin = xs[0], xMax = xs[xs.length - 1];
-    const step = (xMax - xMin) / steps;
-    const curveData = [];
-    for (let i = 0; i <= steps; i++) {
-      const t = xMin + step * i;
-      curveData.push({ x: new Date(t).toISOString().slice(0, 10), y: Math.round(predict(t)) });
-    }
+    const n = xs.length;
+    const sumX = xs.reduce((a, b) => a + b, 0);
+    const sumY = ys.reduce((a, b) => a + b, 0);
+    const sumXY = xs.reduce((a, x, i) => a + x * ys[i], 0);
+    const sumX2 = xs.reduce((a, x) => a + x * x, 0);
+    const denom = n * sumX2 - sumX * sumX;
+    if (denom === 0) return;
+    const slope = (n * sumXY - sumX * sumY) / denom;
+    const intercept = (sumY - slope * sumX) / n;
     datasets.push({
       label: `${grade} Trend`,
-      data: curveData,
+      data: [
+        { x: sorted[0].x, y: Math.round(slope * xs[0] + intercept) },
+        { x: sorted[sorted.length - 1].x, y: Math.round(slope * xs[xs.length - 1] + intercept) },
+      ],
       borderColor: cfg.color + '66',
       borderWidth: 2,
       borderDash: [6, 4],
       pointRadius: 0,
       showLine: true,
       fill: false,
-      tension: 0.4,
     });
   });
 
