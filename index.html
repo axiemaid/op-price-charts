@@ -11,8 +11,19 @@
 body{font-family:-apple-system,'Segoe UI',sans-serif;background:#0a0f1a;color:#e8e0d4;padding:20px;min-height:100vh}
 h1{text-align:center;font-size:1.5em;color:#fff;margin-bottom:4px}
 .subtitle{text-align:center;color:#8a8070;font-size:.85em;margin-bottom:24px}
-.card-img-wrap{text-align:center;margin-bottom:24px}
-.card-img-wrap img{height:240px;border-radius:8px;box-shadow:0 4px 24px rgba(0,0,0,.5)}
+.card-header{display:flex;gap:24px;justify-content:center;align-items:flex-start;max-width:960px;margin:0 auto 24px;flex-wrap:wrap}
+.card-header img{height:240px;border-radius:8px;box-shadow:0 4px 24px rgba(0,0,0,.5);flex-shrink:0}
+.card-details{background:#131a2e;border:1px solid #1e2d4a;border-radius:10px;padding:16px 20px;min-width:280px;max-width:400px}
+.card-details .field{display:flex;gap:8px;align-items:baseline;padding:6px 0;border-bottom:1px solid #1e2d4a}
+.card-details .field:last-child{border-bottom:none}
+.card-details .field-label{color:#8a8070;font-size:.7em;text-transform:uppercase;letter-spacing:.5px;width:70px;flex-shrink:0}
+.card-details .field-values{display:flex;gap:8px;flex-wrap:wrap}
+.card-details .copyable{cursor:pointer;font-size:.85em;padding:2px 8px;border-radius:4px;transition:background .15s;position:relative}
+.card-details .copyable:hover{background:#1e2d4a}
+.card-details .copyable.en{color:#e8e0d4}
+.card-details .copyable.ja{color:#d4a94c}
+.card-details .copyable .copied{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:.65em;color:#d4a94c;opacity:0;transition:opacity .2s;pointer-events:none}
+.card-details .copyable .copied.show{opacity:1}
 .chart-wrap{max-width:960px;margin:0 auto;background:#131a2e;border-radius:12px;padding:24px;border:1px solid #1e2d4a}
 canvas{width:100%!important}
 .stats{max-width:960px;margin:20px auto 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
@@ -36,9 +47,64 @@ canvas{width:100%!important}
 <h1>S03 ゴムゴムの実</h1>
 <p class="subtitle">One Piece Hyper Battle Carddass (1999) — Mercari Japan Sold Prices</p>
 
-<div class="card-img-wrap">
+<div class="card-header">
   <img src="images/s03.png" alt="S03 ゴムゴムの実">
+  <div class="card-details">
+    <div class="field">
+      <span class="field-label">Card ID</span>
+      <div class="field-values">
+        <span class="copyable en" onclick="copyText(this,'S03')">S03<span class="copied">Copied!</span></span>
+      </div>
+    </div>
+    <div class="field">
+      <span class="field-label">Name</span>
+      <div class="field-values">
+        <span class="copyable en" onclick="copyText(this,'Gomu Gomu no Mi')">Gomu Gomu no Mi<span class="copied">Copied!</span></span>
+        <span class="copyable ja" onclick="copyText(this,'ゴムゴムの実')">ゴムゴムの実<span class="copied">Copied!</span></span>
+      </div>
+    </div>
+    <div class="field">
+      <span class="field-label">Type</span>
+      <div class="field-values">
+        <span class="copyable en" onclick="copyText(this,'Devil Fruit')">Devil Fruit<span class="copied">Copied!</span></span>
+        <span class="copyable ja" onclick="copyText(this,'悪魔の実')">悪魔の実<span class="copied">Copied!</span></span>
+      </div>
+    </div>
+    <div class="field">
+      <span class="field-label">Series</span>
+      <div class="field-values">
+        <span class="copyable en" onclick="copyText(this,'One Piece Hyper Battle')">One Piece Hyper Battle<span class="copied">Copied!</span></span>
+      </div>
+    </div>
+    <div class="field">
+      <span class="field-label">Set</span>
+      <div class="field-values">
+        <span class="copyable en" onclick="copyText(this,'First Stage')">First Stage<span class="copied">Copied!</span></span>
+      </div>
+    </div>
+    <div class="field">
+      <span class="field-label">Released</span>
+      <div class="field-values">
+        <span class="copyable en" onclick="copyText(this,'November 1999')">November 1999<span class="copied">Copied!</span></span>
+      </div>
+    </div>
+    <div class="field">
+      <span class="field-label">Power</span>
+      <div class="field-values">
+        <span class="copyable en" onclick="copyText(this,'250 → 450')">250 → 450<span class="copied">Copied!</span></span>
+      </div>
+    </div>
+  </div>
 </div>
+
+<script>
+function copyText(el, text) {
+  navigator.clipboard.writeText(text);
+  const badge = el.querySelector('.copied');
+  badge.classList.add('show');
+  setTimeout(() => badge.classList.remove('show'), 1000);
+}
+</script>
 
 <div class="chart-wrap">
   <canvas id="priceChart"></canvas>
