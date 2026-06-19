@@ -26,14 +26,17 @@ h1{text-align:center;font-size:1.5em;color:#fff;margin-bottom:4px}
 .card-details .copyable:hover .copy-icon{opacity:.7}
 .card-details .copyable .copied{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:.65em;color:#d4a94c;opacity:0;transition:opacity .2s;pointer-events:none}
 .card-details .copyable .copied.show{opacity:1}
-@media(max-width:600px){
-  .card-header{justify-content:center}
-  .card-header img{height:180px}
+@media(max-width:700px){
+  .card-header{flex-direction:column;align-items:center}
+  .card-header img{height:200px}
   .card-details{min-width:0;width:100%}
+}
+@media(max-width:600px){
+  .card-header img{height:180px}
   .card-details .field-label{width:55px;font-size:.65em}
   .card-details .copyable{font-size:.78em}
   .chart-wrap{padding:12px 8px}
-  .stats{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
   h1{font-size:1.2em}
 }
 .chart-wrap{max-width:960px;margin:0 auto;background:#131a2e;border-radius:12px;padding:24px;border:1px solid #1e2d4a}
@@ -198,7 +201,7 @@ async function init() {
       scales: {
         x: {
           type: 'time',
-          time: { unit: 'week', tooltipFormat: 'yyyy-MM-dd' },
+          time: { unit: 'week', tooltipFormat: 'yyyy-MM-dd', displayFormats: { week: 'MMM d', day: 'MMM d' } },
           title: { display: window.innerWidth >= 600, text: 'Sold Date', color: '#8a8070' },
           grid: { color: '#1e2d4a' },
           ticks: { color: '#8a8070', maxRotation: 45, font: { size: window.innerWidth < 600 ? 9 : 12 } },
