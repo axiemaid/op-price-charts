@@ -8,13 +8,13 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1a1a2e;color:#e0e0e0;padding:20px;min-height:100vh}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#141414;color:#e0e0e0;padding:20px;min-height:100vh}
 h1{text-align:center;font-size:1.5em;color:#fff;margin-bottom:4px}
 .subtitle{text-align:center;color:#888;font-size:.85em;margin-bottom:24px}
-.chart-wrap{max-width:960px;margin:0 auto;background:#16213e;border-radius:12px;padding:24px}
+.chart-wrap{max-width:960px;margin:0 auto;background:#1e1e1e;border-radius:12px;padding:24px}
 canvas{width:100%!important}
 .stats{max-width:960px;margin:20px auto 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-.stat-card{background:#16213e;border-radius:10px;padding:16px;text-align:center}
+.stat-card{background:#1e1e1e;border-radius:10px;padding:16px;text-align:center}
 .stat-card .grade-label{font-size:.75em;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-weight:700}
 .stat-card .median{font-size:1.6em;font-weight:700;color:#fff}
 .stat-card .detail{font-size:.75em;color:#888;margin-top:4px}
@@ -41,10 +41,10 @@ canvas{width:100%!important}
 
 <script>
 const GRADE_CONFIG = {
-  A: { color: '#4cc9f0', label: 'Grade A (Near Mint)' },
-  B: { color: '#f72585', label: 'Grade B (Good)' },
-  C: { color: '#fca311', label: 'Grade C (Fair)' },
-  D: { color: '#8d99ae', label: 'Grade D (Poor)' },
+  A: { color: '#22c55e', label: 'Grade A (Near Mint)' },
+  B: { color: '#eab308', label: 'Grade B (Good)' },
+  C: { color: '#f97316', label: 'Grade C (Fair)' },
+  D: { color: '#ef4444', label: 'Grade D (Poor)' },
 };
 
 function avgByDate(points) {
@@ -105,7 +105,7 @@ async function init() {
       pointRadius: 5,
       pointHoverRadius: 8,
       pointBackgroundColor: cfg.color,
-      pointBorderColor: '#16213e',
+      pointBorderColor: '#1e1e1e',
       pointBorderWidth: 2,
       showLine: true,
       fill: false,
