@@ -22,6 +22,8 @@ h1{text-align:center;font-size:1.5em;color:#fff;margin-bottom:4px}
 .card-details .copyable:hover{background:#1e2d4a}
 .card-details .copyable.en{color:#e8e0d4}
 .card-details .copyable.ja{color:#d4a94c}
+.card-details .copyable .copy-icon{font-size:.7em;opacity:.3;margin-left:4px;transition:opacity .15s}
+.card-details .copyable:hover .copy-icon{opacity:.7}
 .card-details .copyable .copied{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:.65em;color:#d4a94c;opacity:0;transition:opacity .2s;pointer-events:none}
 .card-details .copyable .copied.show{opacity:1}
 .chart-wrap{max-width:960px;margin:0 auto;background:#131a2e;border-radius:12px;padding:24px;border:1px solid #1e2d4a}
@@ -53,45 +55,45 @@ canvas{width:100%!important}
     <div class="field">
       <span class="field-label">Card ID</span>
       <div class="field-values">
-        <span class="copyable en" onclick="copyText(this,'S03')">S03<span class="copied">Copied!</span></span>
+        <span class="copyable en" onclick="copyText(this,'S03')">S03<span class="copy-icon">📋</span><span class="copied">Copied!</span></span>
       </div>
     </div>
     <div class="field">
       <span class="field-label">Name</span>
       <div class="field-values">
-        <span class="copyable en" onclick="copyText(this,'Gomu Gomu no Mi')">Gomu Gomu no Mi<span class="copied">Copied!</span></span>
-        <span class="copyable ja" onclick="copyText(this,'ゴムゴムの実')">ゴムゴムの実<span class="copied">Copied!</span></span>
+        <span class="copyable en" onclick="copyText(this,'Gomu Gomu no Mi')">Gomu Gomu no Mi<span class="copy-icon">📋</span><span class="copied">Copied!</span></span>
+        <span class="copyable ja" onclick="copyText(this,'ゴムゴムの実')">ゴムゴムの実<span class="copy-icon">📋</span><span class="copied">Copied!</span></span>
       </div>
     </div>
     <div class="field">
       <span class="field-label">Type</span>
       <div class="field-values">
-        <span class="copyable en" onclick="copyText(this,'Devil Fruit')">Devil Fruit<span class="copied">Copied!</span></span>
-        <span class="copyable ja" onclick="copyText(this,'悪魔の実')">悪魔の実<span class="copied">Copied!</span></span>
+        <span class="copyable en" onclick="copyText(this,'Devil Fruit')">Devil Fruit<span class="copy-icon">📋</span><span class="copied">Copied!</span></span>
+        <span class="copyable ja" onclick="copyText(this,'悪魔の実')">悪魔の実<span class="copy-icon">📋</span><span class="copied">Copied!</span></span>
       </div>
     </div>
     <div class="field">
       <span class="field-label">Series</span>
       <div class="field-values">
-        <span class="copyable en" onclick="copyText(this,'One Piece Hyper Battle')">One Piece Hyper Battle<span class="copied">Copied!</span></span>
+        <span class="copyable en" onclick="copyText(this,'One Piece Hyper Battle')">One Piece Hyper Battle<span class="copy-icon">📋</span><span class="copied">Copied!</span></span>
       </div>
     </div>
     <div class="field">
       <span class="field-label">Set</span>
       <div class="field-values">
-        <span class="copyable en" onclick="copyText(this,'First Stage')">First Stage<span class="copied">Copied!</span></span>
+        <span class="copyable en" onclick="copyText(this,'First Stage')">First Stage<span class="copy-icon">📋</span><span class="copied">Copied!</span></span>
       </div>
     </div>
     <div class="field">
       <span class="field-label">Released</span>
       <div class="field-values">
-        <span class="copyable en" onclick="copyText(this,'November 1999')">November 1999<span class="copied">Copied!</span></span>
+        <span class="copyable en" onclick="copyText(this,'November 1999')">November 1999<span class="copy-icon">📋</span><span class="copied">Copied!</span></span>
       </div>
     </div>
     <div class="field">
       <span class="field-label">Power</span>
       <div class="field-values">
-        <span class="copyable en" onclick="copyText(this,'250 → 450')">250 → 450<span class="copied">Copied!</span></span>
+        <span class="copyable en" onclick="copyText(this,'250 → 450')">250 → 450<span class="copy-icon">📋</span><span class="copied">Copied!</span></span>
       </div>
     </div>
   </div>
