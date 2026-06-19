@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S03 ゴムゴムの実 — Price Tracker</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1a1a2e;color:#e0e0e0;padding:20px;min-height:100vh}
+h1{text-align:center;font-size:1.5em;color:#fff;margin-bottom:4px}
+.subtitle{text-align:center;color:#888;font-size:.85em;margin-bottom:24px}
+.chart-wrap{max-width:960px;margin:0 auto;background:#16213e;border-radius:12px;padding:24px}
+canvas{width:100%!important}
+.stats{max-width:960px;margin:20px auto 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.stat-card{background:#16213e;border-radius:10px;padding:16px;text-align:center}
+.stat-card .grade-label{font-size:.75em;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-weight:700}
+.stat-card .median{font-size:1.6em;font-weight:700;color:#fff}
+.stat-card .detail{font-size:.75em;color:#888;margin-top:4px}
+.sale-list{list-style:none;margin-top:12px;text-align:left;border-top:1px solid #ffffff10;padding-top:8px}
+.sale-list li{display:flex;gap:8px;align-items:baseline;padding:4px 0;border-bottom:1px solid #ffffff08;font-size:.75em}
+.sale-list .sale-date{color:#888;flex-shrink:0;width:80px}
+.sale-list .sale-price{color:#fff;font-weight:600;flex-shrink:0;width:60px;text-align:right}
+.sale-list .sale-title{color:#666;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.footer{text-align:center;color:#555;font-size:.7em;margin-top:32px}
+</style>
+</head>
+<body>
+
+<h1>S03 ゴムゴムの実</h1>
+<p class="subtitle">One Piece Hyper Battle Carddass (1999) — Mercari Japan Sold Prices</p>
+
+<div class="chart-wrap">
+  <canvas id="priceChart"></canvas>
+</div>
+
+<div class="stats" id="statsGrid"></div>
+
+<p class="footer">Data sourced from Mercari Japan sold listings · Updated <span id="lastUpdate"></span></p>
+
+<script>
+const GRADE_CONFIG = {
+  A: { color: '#4cc9f0', label: 'Grade A (Near Mint)' },
+  B: { color: '#f72585', label: 'Grade B (Good)' },
+  C: { color: '#fca311', label: 'Grade C (Fair)' },
+  D: { color: '#8d99ae', label: 'Grade D (Poor)' },
+};
+
+async function init() {
+  const res = await fetch('sales.json');
+  const SALES = await res.json();
+
+  const byGrade = {};
+  SALES.forEach(s => {
+    if (!byGrade[s.grade]) byGrade[s.grade] = [];
+    byGrade[s.grade].push({ x: s.sold_date, y: s.price_jpy, title: s.title, id: s.item_id });
+  });
+
+  const datasets = Object.entries(GRADE_CONFIG)
+    .filter(([g]) => byGrade[g] && byGrade[g].length > 0)
+    .map(([grade, cfg]) => ({
+      label: cfg.label,
+      data: byGrade[grade].map(d => ({ x: d.x, y: d.y, title: d.title, id: d.id })),
+      backgroundColor: cfg.color,
+      borderColor: cfg.color,
+      pointRadius: 7,
+      pointHoverRadius: 10,
+      pointStyle: 'circle',
+      showLine: false,
+    }));
+
+  Object.entries(GRADE_CONFIG).forEach(([grade, cfg]) => {
+    const pts = byGrade[grade];
+    if (!pts || pts.length < 3) return;
+    const sorted = [...pts].sort((a, b) => new Date(a.x) - new Date(b.x));
+    const xs = sorted.map(p => new Date(p.x).getTime());
+    const ys = sorted.map(p => p.y);
+    const n = xs.length;
+    const sumX = xs.reduce((a, b) => a + b, 0);
+    const sumY = ys.reduce((a, b) => a + b, 0);
+    const sumXY = xs.reduce((a, x, i) => a + x * ys[i], 0);
+    const sumX2 = xs.reduce((a, x) => a + x * x, 0);
+    const denom = n * sumX2 - sumX * sumX;
+    if (denom === 0) return;
+    const slope = (n * sumXY - sumX * sumY) / denom;
+    const intercept = (sumY - slope * sumX) / n;
+    datasets.push({
+      label: `${grade} Trend`,
+      data: [
+        { x: sorted[0].x, y: Math.round(slope * xs[0] + intercept) },
+        { x: sorted[sorted.length - 1].x, y: Math.round(slope * xs[xs.length - 1] + intercept) },
+      ],
+      borderColor: cfg.color + '66',
+      borderWidth: 2,
+      borderDash: [6, 4],
+      pointRadius: 0,
+      showLine: true,
+      fill: false,
+    });
+  });
+
+  const ctx = document.getElementById('priceChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'scatter',
+    data: { datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      aspectRatio: 2,
+      scales: {
+        x: {
+          type: 'time',
+          time: { unit: 'week', tooltipFormat: 'yyyy-MM-dd' },
+          title: { display: true, text: 'Sold Date', color: '#888' },
+          grid: { color: '#ffffff10' },
+          ticks: { color: '#888' },
+        },
+        y: {
+          title: { display: true, text: 'Price (¥)', color: '#888' },
+          grid: { color: '#ffffff10' },
+          ticks: { color: '#888', callback: v => '¥' + v.toLocaleString() },
+          beginAtZero: true,
+        },
+      },
+      plugins: {
+        legend: {
+          labels: {
+            color: '#ccc',
+            usePointStyle: true,
+            padding: 16,
+            filter: item => !item.text.includes('Trend'),
+          },
+        },
+        tooltip: {
+          callbacks: {
+            title: ctx => ctx[0]?.raw?.x || '',
+            label: ctx => {
+              const d = ctx.raw;
+              const lines = ['¥' + d.y.toLocaleString() + ' (' + ctx.dataset.label + ')'];
+              if (d.title) lines.push(d.title.length > 50 ? d.title.slice(0, 50) + '…' : d.title);
+              return lines;
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const statsGrid = document.getElementById('statsGrid');
+  ['A', 'B', 'C', 'D'].forEach(g => {
+    const pts = byGrade[g];
+    if (!pts || pts.length === 0) return;
+    const prices = pts.map(p => p.y).sort((a, b) => a - b);
+    const mid = Math.floor(prices.length / 2);
+    const median = prices.length % 2 === 0
+      ? Math.round((prices[mid - 1] + prices[mid]) / 2)
+      : prices[mid];
+    const cfg = GRADE_CONFIG[g];
+    const sorted = [...pts].sort((a, b) => new Date(b.x) - new Date(a.x));
+    const card = document.createElement('div');
+    card.className = 'stat-card';
+    card.innerHTML = `
+      <div class="grade-label" style="color:${cfg.color}">${cfg.label}</div>
+      <div class="median">¥${median.toLocaleString()}</div>
+      <div class="detail">${prices.length} sales · ¥${Math.min(...prices).toLocaleString()} – ¥${Math.max(...prices).toLocaleString()}</div>
+      <ul class="sale-list">
+        ${sorted.map(s => `<li><span class="sale-date">${s.x}</span><span class="sale-price">¥${s.y.toLocaleString()}</span><span class="sale-title">${(s.title||'').length > 40 ? s.title.slice(0,40)+'…' : s.title}</span></li>`).join('')}
+      </ul>
+    `;
+    statsGrid.appendChild(card);
+  });
+
+  const dates = SALES.map(s => new Date(s.logged_at));
+  document.getElementById('lastUpdate').textContent =
+    new Date(Math.max(...dates)).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+init();
+</script>
+</body>
+</html>
