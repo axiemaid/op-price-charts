@@ -26,6 +26,16 @@ h1{text-align:center;font-size:1.5em;color:#fff;margin-bottom:4px}
 .card-details .copyable:hover .copy-icon{opacity:.7}
 .card-details .copyable .copied{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:.65em;color:#d4a94c;opacity:0;transition:opacity .2s;pointer-events:none}
 .card-details .copyable .copied.show{opacity:1}
+@media(max-width:600px){
+  .card-header{justify-content:center}
+  .card-header img{height:180px}
+  .card-details{min-width:0;width:100%}
+  .card-details .field-label{width:55px;font-size:.65em}
+  .card-details .copyable{font-size:.78em}
+  .chart-wrap{padding:12px 8px}
+  .stats{grid-template-columns:1fr}
+  h1{font-size:1.2em}
+}
 .chart-wrap{max-width:960px;margin:0 auto;background:#131a2e;border-radius:12px;padding:24px;border:1px solid #1e2d4a}
 canvas{width:100%!important}
 .stats{max-width:960px;margin:20px auto 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
@@ -141,8 +151,8 @@ async function init() {
       data: byGrade[grade].map(d => ({ x: d.x, y: d.y, title: d.title, id: d.id })),
       backgroundColor: cfg.color,
       borderColor: cfg.color,
-      pointRadius: 7,
-      pointHoverRadius: 10,
+      pointRadius: window.innerWidth < 600 ? 4 : 7,
+      pointHoverRadius: window.innerWidth < 600 ? 6 : 10,
       pointStyle: 'circle',
       showLine: false,
     }));
@@ -184,19 +194,19 @@ async function init() {
     options: {
       responsive: true,
       maintainAspectRatio: true,
-      aspectRatio: 2,
+      aspectRatio: window.innerWidth < 600 ? 1.2 : 2,
       scales: {
         x: {
           type: 'time',
           time: { unit: 'week', tooltipFormat: 'yyyy-MM-dd' },
-          title: { display: true, text: 'Sold Date', color: '#8a8070' },
+          title: { display: window.innerWidth >= 600, text: 'Sold Date', color: '#8a8070' },
           grid: { color: '#1e2d4a' },
-          ticks: { color: '#8a8070' },
+          ticks: { color: '#8a8070', maxRotation: 45, font: { size: window.innerWidth < 600 ? 9 : 12 } },
         },
         y: {
-          title: { display: true, text: 'Price (¥)', color: '#8a8070' },
+          title: { display: window.innerWidth >= 600, text: 'Price (¥)', color: '#8a8070' },
           grid: { color: '#1e2d4a' },
-          ticks: { color: '#8a8070', callback: v => '¥' + v.toLocaleString() },
+          ticks: { color: '#8a8070', callback: v => '¥' + v.toLocaleString(), font: { size: window.innerWidth < 600 ? 9 : 12 } },
           beginAtZero: true,
         },
       },
@@ -205,7 +215,8 @@ async function init() {
           labels: {
             color: '#e8e0d4',
             usePointStyle: true,
-            padding: 16,
+            padding: window.innerWidth < 600 ? 8 : 16,
+            font: { size: window.innerWidth < 600 ? 10 : 12 },
             filter: item => !item.text.includes('Trend'),
           },
         },
