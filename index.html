@@ -22,13 +22,13 @@ h1{text-align:center;font-size:1.5em;color:#fff;margin-bottom:4px}
 .card-details .copyable:hover{background:#1e2d4a}
 .card-details .copyable.en{color:#e8e0d4}
 .card-details .copyable.ja{color:#d4a94c}
-.card-details .copyable .copy-icon{font-size:.7em;opacity:.3;margin-left:4px;transition:opacity .15s}
-.card-details .copyable:hover .copy-icon{opacity:.7}
+.card-details .copy-icon{font-size:.7em;margin-left:4px}
+.card-details .static{font-size:.85em;color:#8a8070;padding:2px 8px}
 .card-details .copyable .copied{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:.65em;color:#d4a94c;opacity:0;transition:opacity .2s;pointer-events:none}
 .card-details .copyable .copied.show{opacity:1}
 @media(max-width:700px){
   .card-header{flex-direction:column;align-items:center}
-  .card-header img{height:200px}
+  .card-header img{height:220px}
   .card-details{min-width:0;width:100%}
 }
 @media(max-width:600px){
@@ -66,12 +66,6 @@ canvas{width:100%!important}
   <img src="images/s03.png" alt="S03 ゴムゴムの実">
   <div class="card-details">
     <div class="field">
-      <span class="field-label">Card ID</span>
-      <div class="field-values">
-        <span class="copyable en" onclick="copyText(this,'S03')">S03<span class="copy-icon">📋</span><span class="copied">Copied!</span></span>
-      </div>
-    </div>
-    <div class="field">
       <span class="field-label">Name</span>
       <div class="field-values">
         <span class="copyable en" onclick="copyText(this,'Gomu Gomu no Mi')">Gomu Gomu no Mi<span class="copy-icon">📋</span><span class="copied">Copied!</span></span>
@@ -86,28 +80,16 @@ canvas{width:100%!important}
       </div>
     </div>
     <div class="field">
-      <span class="field-label">Series</span>
-      <div class="field-values">
-        <span class="copyable en" onclick="copyText(this,'One Piece Hyper Battle')">One Piece Hyper Battle<span class="copy-icon">📋</span><span class="copied">Copied!</span></span>
-      </div>
-    </div>
-    <div class="field">
       <span class="field-label">Set</span>
-      <div class="field-values">
-        <span class="copyable en" onclick="copyText(this,'First Stage')">First Stage<span class="copy-icon">📋</span><span class="copied">Copied!</span></span>
-      </div>
+      <div class="field-values"><span class="static">First Stage</span></div>
     </div>
     <div class="field">
       <span class="field-label">Released</span>
-      <div class="field-values">
-        <span class="copyable en" onclick="copyText(this,'November 1999')">November 1999<span class="copy-icon">📋</span><span class="copied">Copied!</span></span>
-      </div>
+      <div class="field-values"><span class="static">November 1999</span></div>
     </div>
     <div class="field">
       <span class="field-label">Power</span>
-      <div class="field-values">
-        <span class="copyable en" onclick="copyText(this,'250 → 450')">250 → 450<span class="copy-icon">📋</span><span class="copied">Copied!</span></span>
-      </div>
+      <div class="field-values"><span class="static">250 → 450</span></div>
     </div>
   </div>
 </div>
