@@ -23,6 +23,9 @@ canvas{width:100%!important}
 .sale-list .sale-date{color:#888;flex-shrink:0;width:80px}
 .sale-list .sale-price{color:#fff;font-weight:600;flex-shrink:0;width:60px;text-align:right}
 .sale-list .sale-title{color:#666;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sale-link{display:flex;gap:8px;align-items:baseline;text-decoration:none;color:inherit;width:100%}
+.sale-link:hover .sale-title{color:#aaa}
+.sale-link:hover .sale-price{color:#4cc9f0}
 .footer{text-align:center;color:#555;font-size:.7em;margin-top:32px}
 </style>
 </head>
@@ -165,7 +168,7 @@ async function init() {
       <div class="median">¥${median.toLocaleString()}</div>
       <div class="detail">${prices.length} sales · ¥${Math.min(...prices).toLocaleString()} – ¥${Math.max(...prices).toLocaleString()}</div>
       <ul class="sale-list">
-        ${sorted.map(s => `<li><span class="sale-date">${s.x}</span><span class="sale-price">¥${s.y.toLocaleString()}</span><span class="sale-title">${(s.title||'').length > 40 ? s.title.slice(0,40)+'…' : s.title}</span></li>`).join('')}
+        ${sorted.map(s => `<li><a href="https://jp.mercari.com/item/${s.id}" target="_blank" rel="noopener" class="sale-link"><span class="sale-date">${s.x}</span><span class="sale-price">¥${s.y.toLocaleString()}</span><span class="sale-title">${(s.title||'').length > 40 ? s.title.slice(0,40)+'…' : s.title}</span></a></li>`).join('')}
       </ul>
     `;
     statsGrid.appendChild(card);
